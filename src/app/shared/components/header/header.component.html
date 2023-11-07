@@ -1,0 +1,26 @@
+<div class="header-container w-75">
+  <ul
+    class="header-list d-flex align-items-center justify-content-center gap-3"
+  >
+    <li class="header-list-item">
+      <a
+        [routerLink]="['/home']"
+        #home
+        class="header-list-link"
+        [class.active]="activeComponent === HeaderComponents.HOME"
+      >
+        Home
+      </a>
+    </li>
+    <li class="header-list-item">
+      <a
+        [routerLink]="['/catalog']"
+        #component
+        class="header-list-link"
+        [class.active]="activeComponent === HeaderComponents.CATALOG"
+      >
+        Catalog
+      </a>
+    </li>
+  </ul>
+</div>

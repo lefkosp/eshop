@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-container {
+  background-color: black;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 1rem;
+}
+
+.header-list {
+  padding: 0;
+  margin: 0;
+}
+
+.header-list-item {
+  list-style: none;
+}
+
+.header-list-link {
+  text-decoration: none;
+  color: #e6e6e6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid #ffffff00;
+}
+
+.header-list-link:hover {
+  cursor: pointer;
+}
+
+.header-list-link.active {
+  border: 1px solid #ffffff;
+  background-color: #ffffff;
+  color: black;
+  transition: all ease 0.4s;
+}
