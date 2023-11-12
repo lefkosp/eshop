@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductsService } from 'src/app/services/products.service';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 import {
   trigger,
@@ -43,8 +43,12 @@ export class CatalogComponent implements OnInit {
   };
   public showFilters = false;
   public sortMethod = 'priceAsc';
-  public pageEvent!: PageEvent;
   public pageSize = 10;
+  public pageEvent: PageEvent = {
+    pageIndex: 0,
+    pageSize: this.pageSize,
+    length: 10,
+  };
 
   constructor(private productsService: ProductsService) {}
 
@@ -122,13 +126,25 @@ export class CatalogComponent implements OnInit {
         );
         break;
     }
+    this.pageEvent.length = this.filteredProducts.length;
 
-    const startIndex = this.pageEvent
-      ? this.pageEvent.pageIndex * this.pageEvent.pageSize
-      : 0;
-    const endIndex = this.pageEvent
-      ? startIndex + this.pageEvent.pageSize
-      : this.pageSize;
+    const maxPageIndex =
+      Math.ceil(this.filteredProducts.length / this.pageEvent.pageSize) - 1;
+
+    if (
+      this.pageEvent.pageIndex > maxPageIndex ||
+      this.pageEvent.pageIndex === -1
+    ) {
+      this.pageEvent.pageIndex = maxPageIndex;
+    }
+
+    const startIndex = this.pageEvent.pageIndex * this.pageEvent.pageSize;
+    const endIndex = startIndex + this.pageEvent.pageSize;
     this.filteredProducts = this.filteredProducts.slice(startIndex, endIndex);
+    console.log(this.pageEvent);
+  }
+
+  public updateImageOnError(event: any) {
+    event.target.src = 'https://i.imgur.com/BG8J0Fj.jpg';
   }
 }
