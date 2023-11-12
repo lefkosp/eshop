@@ -1,3 +1,142 @@
 <app-header />
 
-<p>catalog works!</p>
+<div
+  *ngIf="!filteredProducts"
+  class="w-100 d-flex align-items-center justify-content-center flex-column mt-3"
+>
+  <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="filteredProducts" class="catalog-container">
+  <div
+    class="filter-container sticky-filters"
+    [ngClass]="showFilters ? 'filters-background' : null"
+  >
+    <button
+      mat-icon-button
+      class="filter-button"
+      (click)="showFilters = !showFilters"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+    <form
+      class="filters"
+      [hidden]="!showFilters"
+      [@expandCollapse]="showFilters ? 'expanded' : 'collapsed'"
+    >
+      <mat-form-field class="filter-form-field">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="filters.search"
+          (ngModelChange)="applyFilters()"
+          name="search"
+        />
+        <mat-icon
+          [ngClass]="!filters.search ? 'not-visible' : null"
+          class="input-icon"
+          matSuffix
+          aria-label="Clear"
+          (click)="filters.search = ''; applyFilters()"
+          >close</mat-icon
+        >
+      </mat-form-field>
+
+      <mat-form-field class="filter-form-field">
+        <mat-label>Minimum price</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="filters.minPrice"
+          (ngModelChange)="applyFilters()"
+          name="minPrice"
+        />
+        <mat-icon
+          [ngClass]="!filters.minPrice ? 'not-visible' : null"
+          class="input-icon"
+          matSuffix
+          aria-label="Clear"
+          (click)="filters.minPrice = ''; applyFilters()"
+          >close</mat-icon
+        >
+      </mat-form-field>
+
+      <mat-form-field class="filter-form-field">
+        <mat-label>Maximum price</mat-label>
+        <input
+          matInput
+          type="text"
+          [(ngModel)]="filters.maxPrice"
+          (ngModelChange)="applyFilters()"
+          name="maxPrice"
+        />
+        <mat-icon
+          [ngClass]="!filters.maxPrice ? 'not-visible' : null"
+          class="input-icon"
+          matSuffix
+          aria-label="Clear"
+          (click)="filters.maxPrice = ''; applyFilters()"
+          >close</mat-icon
+        >
+      </mat-form-field>
+
+      <mat-form-field class="filter-form-field">
+        <mat-label>Sort by</mat-label>
+        <mat-select [(value)]="sortMethod" (selectionChange)="applyFilters()">
+          <mat-option value="priceAsc">Price (Low to High)</mat-option>
+          <mat-option value="priceDesc">Price (High to Low)</mat-option>
+          <mat-option value="nameAsc">Name (A-Z)</mat-option>
+          <mat-option value="nameDesc">Name (Z-A)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div>
+        <mat-checkbox
+          [(ngModel)]="filters.inStock"
+          (ngModelChange)="applyFilters()"
+          name="inStock"
+          >In stock</mat-checkbox
+        >
+        <mat-checkbox
+          [(ngModel)]="filters.preorder"
+          (ngModelChange)="applyFilters()"
+          name="preorder"
+          >Pre-order</mat-checkbox
+        >
+      </div>
+    </form>
+  </div>
+  <div class="main-catalog-container w-100">
+    <div class="product" *ngFor="let product of filteredProducts" [@fadeIn]>
+      <mat-card class="product-card">
+        <img
+          mat-card-image
+          [src]="
+            product.images[0]
+              ? product.images[0]
+              : 'https://i.imgur.com/BG8J0Fj.jpg'
+          "
+          alt="Product image"
+          class="product-image"
+        />
+        <div class="d-flex flex-column gap-1 flex-grow-1">
+          <mat-card-content class="card-content">
+            <span class="product-brand">{{ product.category.name }}</span>
+            <h2 class="product-title">{{ product.title }}</h2>
+            <p class="product-description">{{ product.description }}</p>
+          </mat-card-content>
+          <mat-card-footer class="card-footer">
+            <h3 class="product-price">{{ product.price | currency }}</h3>
+          </mat-card-footer>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <mat-paginator
+    [length]="allProducts.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20]"
+    (page)="pageEvent = $event; applyFilters()"
+  ></mat-paginator>
+</div>

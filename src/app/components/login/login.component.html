@@ -1,1 +1,29 @@
-<a [routerLink]="['/home']" #home class="header-list-link active"> Home </a>
+<div class="login-container">
+  <form class="login-form" [formGroup]="details" (ngSubmit)="login()">
+    <h1 class="login-header">Welcome!</h1>
+    <mat-form-field class="my-3">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" formControlName="username" />
+      <mat-error
+        *ngIf="
+          formSubmitted && details.get('username')?.hasError('invalidUsername')
+        "
+      >
+        Invalid username.
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="mb-3">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password" />
+      <mat-error
+        *ngIf="
+          formSubmitted && details.get('password')?.hasError('invalidPassword')
+        "
+      >
+        Invalid password.
+      </mat-error>
+    </mat-form-field>
+
+    <button type="submit" name="submit" class="login-button">Login</button>
+  </form>
+</div>
