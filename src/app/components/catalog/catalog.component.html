@@ -33,6 +33,7 @@
           (ngModelChange)="applyFilters()"
           name="search"
         />
+        <!-- set visibility instead of display so that margins and paddings stay the same in the hidden position as well -->
         <mat-icon
           [ngClass]="!filters.search ? 'not-visible' : null"
           class="input-icon"
@@ -117,6 +118,7 @@
           alt="Product image"
           class="product-image"
         />
+        <!-- if product image doesn't load, load a default one -->
         <div class="d-flex flex-column gap-1 flex-grow-1">
           <mat-card-content class="card-content">
             <span class="product-brand">{{ product.category.name }}</span>
@@ -130,11 +132,11 @@
       </mat-card>
     </div>
   </div>
+  <mat-paginator
+    [length]="pageEvent.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20]"
+    aria-label="Select page"
+    (page)="pageEvent = $event; applyFilters()"
+  ></mat-paginator>
 </div>
-<mat-paginator
-  [length]="pageEvent.length"
-  [pageSize]="pageSize"
-  [pageSizeOptions]="[5, 10, 20]"
-  aria-label="Select page"
-  (page)="pageEvent = $event; applyFilters()"
-></mat-paginator>

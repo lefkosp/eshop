@@ -15,11 +15,13 @@ import {
   templateUrl: './catalog.component.html',
   styleUrls: ['./catalog.component.scss'],
   animations: [
+    // filter box animations
     trigger('expandCollapse', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('300ms ease')),
     ]),
+    // product cards animations
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px)' }),
@@ -54,7 +56,8 @@ export class CatalogComponent implements OnInit {
 
   public ngOnInit() {
     this.productsService.getAllProducts().subscribe((prod: any) => {
-      this.allProducts = prod.map((product: any, index: number) => {
+      this.allProducts = prod.map((product: any) => {
+        // get products and set random inStock and preorder values (API didn't provide these properties)
         const randomNumber = Math.floor(Math.random() * 100) + 1;
         const inStock = randomNumber % 2 === 0;
         const preorder = inStock
@@ -72,6 +75,7 @@ export class CatalogComponent implements OnInit {
   }
 
   public applyFilters(): void {
+    // check if there are any filters with value
     const filtersExist =
       this.filters.search ||
       this.filters.minPrice !== null ||
@@ -81,6 +85,7 @@ export class CatalogComponent implements OnInit {
 
     this.filteredProducts = filtersExist
       ? this.allProducts.filter((product: any) => {
+          // check if the given product matches any of the filters
           const matchesSearch = product.title
             .toLowerCase()
             .includes(this.filters.search.toLowerCase());
@@ -89,7 +94,7 @@ export class CatalogComponent implements OnInit {
             product.price >= this.filters.minPrice;
           const matchesMaxPrice =
             this.filters.maxPrice === null ||
-            product.price <= (this.filters.maxPrice || Number.MAX_SAFE_INTEGER);
+            product.price <= (this.filters.maxPrice || Number.MAX_SAFE_INTEGER); // use MAX_SAFE_INTEGER in case maxPrice is 0 or null so every product can match it
           const matchesInStock = !this.filters.inStock || product.inStock;
           const matchesPreorder = !this.filters.preorder || product.preorder;
           return (
@@ -102,6 +107,7 @@ export class CatalogComponent implements OnInit {
         })
       : this.allProducts;
 
+    // sort the filtered products
     switch (this.sortMethod) {
       case 'priceAsc':
         this.filteredProducts.sort((a: any, b: any) => a.price - b.price);
@@ -126,6 +132,8 @@ export class CatalogComponent implements OnInit {
         );
         break;
     }
+
+    // update pagination
     this.pageEvent.length = this.filteredProducts.length;
 
     const maxPageIndex =
@@ -133,15 +141,15 @@ export class CatalogComponent implements OnInit {
 
     if (
       this.pageEvent.pageIndex > maxPageIndex ||
-      this.pageEvent.pageIndex === -1
+      this.pageEvent.pageIndex === -1 // -1 occurs when there are no products to show, need to reset if this happens
     ) {
       this.pageEvent.pageIndex = maxPageIndex;
     }
 
+    // get the correct items for the page
     const startIndex = this.pageEvent.pageIndex * this.pageEvent.pageSize;
     const endIndex = startIndex + this.pageEvent.pageSize;
     this.filteredProducts = this.filteredProducts.slice(startIndex, endIndex);
-    console.log(this.pageEvent);
   }
 
   public updateImageOnError(event: any) {

@@ -17,6 +17,7 @@ export class HeaderComponent {
   public activeComponent: HeaderComponents = HeaderComponents.HOME;
 
   constructor(private router: Router) {
+    // header navigation
     this.router.events
       .pipe(
         filter(

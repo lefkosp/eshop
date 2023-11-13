@@ -10,6 +10,7 @@ export class AuthService {
     return this._isLoggedIn;
   }
 
+  // set login to true
   public login() {
     this._isLoggedIn = true;
   }

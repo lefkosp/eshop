@@ -7,7 +7,7 @@ import { AuthGuard } from './guards/auth-guard.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, //Guard doesn't let you continue to these routes if you are not logged in
   { path: 'catalog', component: CatalogComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
 ];

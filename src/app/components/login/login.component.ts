@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+  // login formgroup with validation
   public details = new FormGroup({
     username: new FormControl('', [
       Validators.required,
@@ -32,6 +33,7 @@ export class LoginComponent {
   public usernameValidator(control: AbstractControl) {
     const value = control.value;
 
+    // check if value is correct to login, otherwise return error
     if (value !== 'Admin') return { invalidUsername: true };
 
     return null;
@@ -40,6 +42,7 @@ export class LoginComponent {
   public passwordValidator(control: AbstractControl) {
     const value = control.value;
 
+    // check if value is correct to login, otherwise return error
     if (value !== '123456') return { invalidPassword: true };
 
     return null;
@@ -50,6 +53,7 @@ export class LoginComponent {
 
     if (this.details.invalid) return;
 
+    // set login to true
     this.authService.login();
     this.router.navigate(['/home']);
   }
